@@ -5,23 +5,20 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "users")
-public class User extends BaseEntity {
+@Table(name = "products")
+public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Column(nullable = false)
+    private Double price;
 
     @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
+    @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;
 
 }
