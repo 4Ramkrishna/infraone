@@ -22,4 +22,10 @@ public class TestController {
     public String adminAccess() {
         return "Admin Board.";
     }
+
+    @GetMapping("/seller")
+    @PreAuthorize("hasRole('SELLER')")
+    public String sellerAccess() {
+        return "Seller Board.";
+    }
 }

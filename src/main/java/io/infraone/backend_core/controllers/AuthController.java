@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.infraone.backend_core.models.Role;
+import io.infraone.backend_core.models.Seller;
 import io.infraone.backend_core.models.User;
 import io.infraone.backend_core.payload.request.LoginRequest;
 import io.infraone.backend_core.payload.request.SignupRequest;
 import io.infraone.backend_core.payload.response.JwtResponse;
 import io.infraone.backend_core.payload.response.MessageResponse;
+import io.infraone.backend_core.repository.SellerRepository;
 import io.infraone.backend_core.repository.UserRepository;
 import io.infraone.backend_core.security.jwt.JwtUtils;
 import io.infraone.backend_core.security.services.UserDetailsImpl;
@@ -43,6 +45,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    SellerRepository sellerRepository;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -82,21 +87,26 @@ public class AuthController {
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
         user.setRole(Role.USER);
 
+        Seller seller = sellerRepository.findByCode(signUpRequest.getSellerCode()).orElse(null);
+        user.setSeller(seller);
+
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/create")
     public ResponseEntity<?> createAdmin(@RequestBody SignupRequest signUpRequest) {
         User admin = new User();
         admin.setName(signUpRequest.getUsername());
         admin.setEmail(signUpRequest.getEmail());
         admin.setPassword(encoder.encode(signUpRequest.getPassword()));
-        admin.setRole(Role.ADMIN);
+        admin.setRole(Role.SELLER);
+
+        Seller seller = sellerRepository.findByCode(signUpRequest.getSellerCode()).orElse(null);
+        admin.setSeller(seller);
 
         userRepository.save(admin);
-        return ResponseEntity.ok("Admin created");
+        return ResponseEntity.ok("Seller created");
     }
 }
