@@ -2,8 +2,8 @@ package io.infraone.backend_core.controllers;
 
 import io.infraone.backend_core.models.Cart;
 import io.infraone.backend_core.models.Seller;
-import io.infraone.backend_core.models.User;
 import io.infraone.backend_core.repository.SellerRepository;
+import io.infraone.backend_core.security.services.UserDetailsImpl;
 import io.infraone.backend_core.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class CartController {
 
     @PostMapping("/{sellerCode}/add")
     public ResponseEntity<Cart> addToCart(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable String sellerCode,
             @RequestParam Long productId,
             @RequestParam Integer quantity
@@ -42,7 +42,7 @@ public class CartController {
 
     @PutMapping("/{sellerCode}/update")
     public ResponseEntity<Cart> updateCart(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable String sellerCode,
             @RequestParam Long productId,
             @RequestParam Integer quantity
@@ -62,7 +62,7 @@ public class CartController {
 
     @GetMapping("/{sellerCode}")
     public ResponseEntity<Cart> getCart(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable String sellerCode
     ) {
         Seller seller = sellerRepository.findByCode(sellerCode)
@@ -75,7 +75,7 @@ public class CartController {
 
     @DeleteMapping("/{sellerCode}/clear")
     public ResponseEntity<Void> clearCart(
-            @AuthenticationPrincipal User authUser,
+            @AuthenticationPrincipal UserDetailsImpl authUser,
             @PathVariable String sellerCode
     ) {
         Seller seller = sellerRepository.findByCode(sellerCode)
