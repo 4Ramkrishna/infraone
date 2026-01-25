@@ -42,6 +42,11 @@ public class ProductService {
         productRepository.delete(product);
     }
 
+    public Product getProductByIdAndSeller(Long productId, Long sellerId) {
+        return productRepository.findByIdAndSellerId(productId, sellerId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
     public List<Product> getProductsBySeller(Long sellerId) {
         return productRepository.findBySellerId(sellerId);
     }

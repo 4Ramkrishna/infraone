@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import io.infraone.backend_core.models.Seller;
 import io.infraone.backend_core.models.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,14 +27,18 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Getter
+    private Seller seller;
+
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String name, String email, String password,
+    public UserDetailsImpl(Long id, String name, String email, String password, Seller seller,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.seller = seller;
         this.authorities = authorities;
     }
 
@@ -46,6 +51,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getName(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getSeller(),
                 authorities
         );
     }

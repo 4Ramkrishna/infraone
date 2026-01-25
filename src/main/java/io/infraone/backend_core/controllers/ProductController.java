@@ -2,6 +2,7 @@ package io.infraone.backend_core.controllers;
 
 import io.infraone.backend_core.models.Product;
 import io.infraone.backend_core.models.User;
+import io.infraone.backend_core.security.services.UserDetailsImpl;
 import io.infraone.backend_core.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> addProduct(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetailsImpl user,
             @RequestBody Product product
     ) {
         Product saved = productService.addProduct(user.getSeller().getId(), product);
@@ -30,7 +31,7 @@ public class ProductController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<Product> updateProduct(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable Long productId,
             @RequestBody Product product
     ) {
@@ -44,16 +45,26 @@ public class ProductController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable Long productId
     ) {
         productService.deleteProduct(user.getSeller().getId(), productId);
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{productId}")
+    public ResponseEntity<Product> getProduct(
+            @AuthenticationPrincipal UserDetailsImpl user,
+            @PathVariable Long productId
+    ) {
+        Product product = productService.getProductByIdAndSeller(productId, user.getSeller().getId());
+
+        return ResponseEntity.ok(product);
+    }
+
     @GetMapping
     public ResponseEntity<List<Product>> getProducts(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal UserDetailsImpl user
     ) {
         return ResponseEntity.ok(
                 productService.getProductsBySeller(user.getSeller().getId())
