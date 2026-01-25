@@ -2,7 +2,7 @@ package io.infraone.backend_core.controllers;
 
 import io.infraone.backend_core.models.Order;
 import io.infraone.backend_core.models.OrderStatus;
-import io.infraone.backend_core.models.User;
+import io.infraone.backend_core.security.services.UserDetailsImpl;
 import io.infraone.backend_core.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class SellerOrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getOrders(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal UserDetailsImpl user
     ) {
         return ResponseEntity.ok(
                 orderService.getOrdersForSeller(user.getSeller().getId())
@@ -31,7 +31,7 @@ public class SellerOrderController {
 
     @PutMapping("/{orderId}/status")
     public ResponseEntity<Order> updateOrderStatus(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable Long orderId,
             @RequestParam OrderStatus status
     ) {
