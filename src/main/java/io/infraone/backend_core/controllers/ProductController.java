@@ -1,7 +1,6 @@
 package io.infraone.backend_core.controllers;
 
 import io.infraone.backend_core.models.Product;
-import io.infraone.backend_core.models.User;
 import io.infraone.backend_core.security.services.UserDetailsImpl;
 import io.infraone.backend_core.service.ProductService;
 import lombok.RequiredArgsConstructor;

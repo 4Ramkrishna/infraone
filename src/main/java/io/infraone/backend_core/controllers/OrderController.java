@@ -2,8 +2,8 @@ package io.infraone.backend_core.controllers;
 
 import io.infraone.backend_core.models.Order;
 import io.infraone.backend_core.models.Seller;
-import io.infraone.backend_core.models.User;
 import io.infraone.backend_core.repository.SellerRepository;
+import io.infraone.backend_core.security.services.UserDetailsImpl;
 import io.infraone.backend_core.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class OrderController {
 
     @PostMapping("/{sellerCode}")
     public ResponseEntity<Order> placeOrder(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable String sellerCode,
             @RequestParam String deliveryAddress
     ) {
@@ -41,7 +41,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getMyOrders(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal UserDetailsImpl user
     ) {
         return ResponseEntity.ok(
                 orderService.getOrdersForUser(user.getId())
