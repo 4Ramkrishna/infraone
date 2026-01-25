@@ -1,5 +1,6 @@
 package io.infraone.backend_core.controllers;
 
+import io.infraone.backend_core.dto.request.OrderRequest;
 import io.infraone.backend_core.models.Order;
 import io.infraone.backend_core.models.Seller;
 import io.infraone.backend_core.repository.SellerRepository;
@@ -26,7 +27,7 @@ public class OrderController {
     public ResponseEntity<Order> placeOrder(
             @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable String sellerCode,
-            @RequestParam String deliveryAddress
+            @RequestBody OrderRequest orderRequest
     ) {
         Seller seller = sellerRepository.findByCode(sellerCode)
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
@@ -34,7 +35,7 @@ public class OrderController {
         Order order = orderService.placeOrder(
                 user.getId(),
                 seller.getId(),
-                deliveryAddress
+                orderRequest.getDeliveryAddress()
         );
         return ResponseEntity.ok(order);
     }

@@ -1,5 +1,6 @@
 package io.infraone.backend_core.controllers;
 
+import io.infraone.backend_core.dto.request.CartRequest;
 import io.infraone.backend_core.models.Cart;
 import io.infraone.backend_core.models.Seller;
 import io.infraone.backend_core.repository.SellerRepository;
@@ -24,8 +25,7 @@ public class CartController {
     public ResponseEntity<Cart> addToCart(
             @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable String sellerCode,
-            @RequestParam Long productId,
-            @RequestParam Integer quantity
+            @RequestBody CartRequest addToCartRequest
     ) {
         Seller seller = sellerRepository.findByCode(sellerCode)
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
@@ -34,8 +34,8 @@ public class CartController {
                 cartService.addToCart(
                         user.getId(),
                         seller.getId(),
-                        productId,
-                        quantity
+                        addToCartRequest.getProductId(),
+                        addToCartRequest.getQuantity()
                 )
         );
     }
@@ -44,8 +44,7 @@ public class CartController {
     public ResponseEntity<Cart> updateCart(
             @AuthenticationPrincipal UserDetailsImpl user,
             @PathVariable String sellerCode,
-            @RequestParam Long productId,
-            @RequestParam Integer quantity
+            @RequestBody CartRequest updateCartRequest
     ) {
         Seller seller = sellerRepository.findByCode(sellerCode)
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
@@ -54,8 +53,8 @@ public class CartController {
                 cartService.updateCartItem(
                         user.getId(),
                         seller.getId(),
-                        productId,
-                        quantity
+                        updateCartRequest.getProductId(),
+                        updateCartRequest.getQuantity()
                 )
         );
     }

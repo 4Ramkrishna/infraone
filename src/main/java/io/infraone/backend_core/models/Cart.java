@@ -1,5 +1,6 @@
 package io.infraone.backend_core.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,6 +28,7 @@ public class Cart extends BaseEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @JsonManagedReference
     private List<CartItem> items = new ArrayList<>();
 
 }
